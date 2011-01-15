@@ -1,0 +1,125 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo6</title> 
+</head> 
+<body>
+
+
+<div id="cm-example" style="width: 500px; height: 500px"></div>
+
+<button id="start">Monitorear posición actual</button>
+
+<button id="stop">Detener monitoreo</button>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+
+<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+
+
+ 
+<script type="text/javascript">
+
+/*
+Ejemplo 6
+
+Integración de la geolocalización con el mapa
+
+*/
+
+$(function(){
+	
+
+	var marker = null;
+	
+	
+	var cloudmade = new CM.Tiles.CloudMade.Web({key:'cf2b4431703852f78891b7f12e7428dc',styleId:1607});
+	
+	
+	// Se liga el id del div 'cm-example' al mapa
+	var map = new CM.Map('cm-example', cloudmade);
+
+	//Definimos una ubicacion en el distrito federal
+	var loc = new CM.LatLng(19.3914769, -99.18234169);	
+
+
+	map.setCenter(loc, 15);
+	
+
+	//Controles del mapa
+	map.addControl(new CM.LargeMapControl());
+	map.addControl(new CM.OverviewMapControl());
+
+
+	var handler = function(position){
+
+		
+		if(marker != null){
+			
+			map.removeOverlay(marker);
+		}
+		
+		var currentPos = new CM.LatLng(position.coords.latitude, position.coords.longitude);	
+		
+		
+		marker = new CM.Marker(currentPos, {
+			title: "Aquí estoy"
+		});
+		
+		map.addOverlay(marker);
+		
+		map.setCenter(currentPos, 15);
+
+		console.log(position);
+			
+		console.log(position.timestamp);	
+			
+		console.log(new Date(position.timestamp));
+
+
+	}
+
+	var error = function(error){
+
+
+		console.log(error);
+	}
+
+
+	$('#start').click(function(){
+
+		//Verificamos que el navegador soporte el API de Geolocalización
+		if(navigator.geolocation){
+
+			//Obtenemos nuestra posición actual
+			watchID = navigator.geolocation.watchPosition(handler,error);
+			
+			console.log(watchID);
+
+		}
+
+	});
+
+	$('#stop').click(function(){
+
+		if(watchID != null){
+				
+			navigator.geolocation.clearWatch(watchID);
+			
+			console.log("stopped");
+
+		}
+
+	});
+
+
+});
+
+
+	
+</script>
+
+</body>
+</html>

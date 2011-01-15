@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo7 Cliente</title> 
+</head> 
+<body>
+
+
+<button id="start">Monitorear posición actual</button>
+
+<button id="stop">Detener monitoreo</button>
+
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+
+<!-- 
+
+Faye es un sistema de mensajeria que soporta varios protocolos:
+
+a) Bayeux
+
+b) WebSockets
+
+Referencias:
+
+http://faye.jcoglan.com/
+
+http://svn.cometd.com/trunk/bayeux/bayeux.html
+
+-->
+<script type="text/javascript" src="http://www.3duca.me:3000/faye.js"></script>
+
+
+ 
+<script type="text/javascript">
+
+
+$(function(){
+	
+	
+	var faye = new Faye.Client('http://www.3duca.me:3000/faye');
+
+	var handler = function(position){
+		
+		faye.publish(
+					'/location', 
+					{text: JSON.stringify(position)}
+		);
+		
+	}
+
+	var error = function(error){
+
+
+		console.log(error);
+	}
+
+
+	$('#start').click(function(){
+
+		//Verificamos que el navegador soporte el API de Geolocalización
+		if(navigator.geolocation){
+
+			//Obtenemos nuestra posición actual
+			watchID = navigator.geolocation.watchPosition(handler,error);
+			
+		
+
+		}
+
+	});
+
+	$('#stop').click(function(){
+
+		if(watchID != null){
+				
+			navigator.geolocation.clearWatch(watchID);
+			
+		}
+
+	});
+
+
+});
+
+
+	
+</script>
+
+</body>
+</html>

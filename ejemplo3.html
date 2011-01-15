@@ -1,0 +1,132 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo3</title> 
+</head> 
+<body>
+
+<button id="start">Monitorear posición actual</button>
+
+<button id="stop">Detener monitoreo</button>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+
+
+
+<script type="text/javascript">
+
+/*
+Ejemplo 3 
+
+Tracking
+
+*/
+
+
+var watchID = null;
+
+$(function(){
+
+	var handler = function(position){
+
+
+
+		/*
+		Las propiedasdes de position que siempre estarán presentes son:
+
+		coords.latitude					tipo double | grados decimales | ej: 19.42
+		coords.longitude				tipo double | grados decimales | ej: -99.1
+		coords.accuracy					tipo double | metros		   | ej: 80	
+		
+		timestamp* 						tipo Domtimestamp | se puede crear una fecha con: new Date(position.timestamp) 
+		
+
+		Dependiendo del dispositivo estas propiedades pueden o no estar disponibles:
+		
+		coords.altitude
+		coords.speed
+		coords.heading
+
+		
+		Referencias 
+		
+		http://diveintohtml5.org/geolocation.html
+		http://www.w3.org/TR/geolocation-API/
+
+		
+		Nota:
+		Para habilitar el menu debug en Safari:
+		
+		Safari -> preferencias -> avanzado -> "Mostrar menú..."
+		
+		
+		*/
+
+
+		console.log(position);
+			
+		console.log(position.timestamp);	
+			
+		console.log(new Date(position.timestamp));
+
+
+	}
+
+	var error = function(error){
+
+		/*
+		
+		error.code 			tipo short
+		error.message		tipo domString
+		
+		
+		Referencias 
+
+		http://diveintohtml5.org/geolocation.html
+		http://www.w3.org/TR/geolocation-API/
+		
+		*/	
+
+		console.log(error);
+	}
+
+
+	$('#start').click(function(){
+
+		//Verificamos que el navegador soporte el API de Geolocalización
+		if(navigator.geolocation){
+
+			//Obtenemos nuestra posición actual
+			watchID = navigator.geolocation.watchPosition(handler,error);
+			
+			console.log(watchID);
+
+		}
+
+	});
+
+	$('#stop').click(function(){
+
+		if(watchID != null){
+				
+			navigator.geolocation.clearWatch(watchID);
+			
+			console.log("stopped");
+
+		}
+
+	});
+
+
+
+
+
+});
+
+
+	
+</script>
+
+</body>
+</html>

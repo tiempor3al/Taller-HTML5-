@@ -1,0 +1,132 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo2</title> 
+</head> 
+<body>
+
+<button id="localizame">Obtener posición actual</button>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+
+
+
+<script type="text/javascript">
+
+/*
+Ejemplo 2 
+
+Uso de parámetros opcionales
+
+
+*/
+
+
+
+$(function(){
+
+	var handler = function(position){
+
+
+
+		/*
+		Las propiedasdes de position que siempre estarán presentes son:
+
+		coords.latitude					tipo double | grados decimales | ej: 19.42
+		coords.longitude				tipo double | grados decimales | ej: -99.1
+		coords.accuracy					tipo double | metros		   | ej: 80	
+		
+		timestamp* 						tipo Domtimestamp | se puede crear una fecha con: new Date(position.timestamp) 
+		
+
+		Dependiendo del dispositivo estas propiedades pueden o no estar disponibles:
+		
+		coords.altitude
+		coords.speed
+		coords.heading
+
+		
+		Referencias 
+		
+		http://diveintohtml5.org/geolocation.html
+		http://www.w3.org/TR/geolocation-API/
+
+		
+		Nota:
+		Para habilitar el menu debug en Safari:
+		
+		Safari -> preferencias -> avanzado -> "Mostrar menú..."
+		
+		
+		*/
+
+
+		console.log(position);
+			
+		console.log(position.timestamp);	
+			
+		console.log(new Date(position.timestamp));
+
+
+	}
+
+	var error = function(error){
+
+		/*
+		
+		error.code 			tipo short
+		error.message		tipo domString
+		
+		
+		Referencias 
+
+		http://diveintohtml5.org/geolocation.html
+		http://www.w3.org/TR/geolocation-API/
+		
+		*/	
+
+		console.log(error);
+	}
+
+	//Evento del click del botón
+	$('#localizame').click(function(){
+
+		//Verificamos que el navegador soporte el API de Geolocalización
+		if(navigator.geolocation){
+
+			//Obtenemos nuestra posición actual
+			
+			/*
+			Parámetros opcionales (No se tienen que usar todos)
+			
+			enableHighAccuracy		tipo boolean	Nota: Para versiones de Android > 2.2 este parámetro debe ser true
+			timeout 				tipo long		en milisegundos		Nota: Si este valor es muy bajo se corre el riesgo de tener un positionError			
+			maximumAge				tipo long		en milisegundos		
+			
+			Referencias 
+
+			http://diveintohtml5.org/geolocation.html
+			http://www.w3.org/TR/geolocation-API/
+
+			*/
+			
+			
+			navigator.geolocation.getCurrentPosition(handler,error,{enableHighAccuracy:true, timeout: 45000, maximumAge:5000});
+
+		}
+
+	});
+
+
+
+
+
+});
+
+
+	
+</script>
+
+</body>
+</html>

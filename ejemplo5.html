@@ -1,0 +1,97 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo5</title> 
+</head> 
+<body>
+
+
+<div id="cm-example" style="width: 500px; height: 500px"></div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+
+<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+
+
+ 
+<script type="text/javascript">
+
+
+/*
+Ejemplo 5
+
+Marcador con Cloudmade
+
+
+*/
+
+
+$(function(){
+
+
+	/*
+	Parámetros {key,[styleId]}
+	
+	key es la llave de desarrollador
+	
+	styleId es una referencia numérica a un estilo existente, ver http://maps.cloudmade.com/editor
+	
+	Referencias
+	
+	http://developers.cloudmade.com/wiki/web-maps-api/Documentation
+	http://developers.cloudmade.com/projects/web-maps-api/examples
+	
+	*/
+	
+	
+	var cloudmade = new CM.Tiles.CloudMade.Web({key:'cf2b4431703852f78891b7f12e7428dc',styleId:1607});
+	
+	
+	// Se liga el id del div 'cm-example' al mapa
+	var map = new CM.Map('cm-example', cloudmade);
+
+	//Definimos una ubicacion en el distrito federal
+	var loc = new CM.LatLng(19.3914769, -99.18234169);	
+
+	/*
+	Sintaxis: map.setCenter(ubicación,zoom)
+	
+	ubicación tipo CM.LatLng
+	zoom 	  tipo int	
+	
+	Referencias
+	
+	http://developers.cloudmade.com/wiki/web-maps-api/CMMap
+	*/
+	map.setCenter(loc, 15);
+	
+	/*
+	Sintaxis CM.Marker(ubicación,[parámetros])
+	
+	ubicación tipo CM.LatLng
+	
+	Referencias
+	
+	http://developers.cloudmade.com/wiki/web-maps-api/CMMarker
+	*/
+	var myMarker = new CM.Marker(loc, {
+		title: "Aquí estoy"
+	});
+		
+
+	//Controles del mapa
+	map.addControl(new CM.LargeMapControl());
+	map.addControl(new CM.OverviewMapControl());
+
+	
+	map.addOverlay(myMarker);
+
+});
+
+
+	
+</script>
+
+</body>
+</html>

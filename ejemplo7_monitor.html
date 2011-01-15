@@ -1,0 +1,98 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>Ejemplo7 Monitor</title> 
+</head> 
+<body>
+
+
+<div id="cm-example" style="width: 500px; height: 500px"></div>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+
+<!-- 
+
+Faye es un sistema de mensajeria que soporta varios protocolos:
+
+a) Bayeux
+
+b) WebSockets
+
+Referencias:
+
+http://faye.jcoglan.com/
+
+http://svn.cometd.com/trunk/bayeux/bayeux.html
+
+-->
+<script type="text/javascript" src="http://www.3duca.me:3000/faye.js"></script>
+
+
+ 
+<script type="text/javascript">
+
+
+$(function(){
+	
+
+	var marker = null;
+	
+	var faye = new Faye.Client('http://www.3duca.me:3000/faye');
+	
+	
+	var cloudmade = new CM.Tiles.CloudMade.Web({key:'cf2b4431703852f78891b7f12e7428dc',styleId:1607});
+	
+	
+	// Se liga el id del div 'cm-example' al mapa
+	var map = new CM.Map('cm-example', cloudmade);
+
+	//Definimos una ubicacion en el distrito federal
+	var loc = new CM.LatLng(19.3914769, -99.18234169);	
+
+
+	map.setCenter(loc, 15);
+	
+
+	//Controles del mapa
+	map.addControl(new CM.LargeMapControl());
+	map.addControl(new CM.OverviewMapControl());
+
+
+	faye.subscribe('/location',function(message){
+
+
+		console.log(message);
+
+		var position = JSON.parse(message.text);
+		
+		if(marker != null){
+			
+			map.removeOverlay(marker);
+		}
+		
+		var currentPos = new CM.LatLng(position.coords.latitude, position.coords.longitude);	
+		
+		
+		marker = new CM.Marker(currentPos, {
+			title: "Aquí estoy"
+		});
+		
+		map.addOverlay(marker);
+		
+		map.setCenter(currentPos, 15);
+
+	});
+
+
+
+});
+
+
+	
+</script>
+
+</body>
+</html>
